@@ -223,29 +223,34 @@ function QuickSort(array) {
  * @param {number} i    需要操作的结点
  */
 function heapify(tree, i) {
-
-    console.log("heapify",tree)
-    
-    if (i >= tree.length) {
-        return tree
-    }
+    // console.log("heapify",tree)
+    // i结点的两个子节点
     let c1 = 2 * i + 1
     let c2 = 2 * i + 2
     let max = i
 
+    // 如果叶子结点大于根结点
     if (c1 < tree.length && tree[c1] > tree[max]) {
+        // 下标交换
         max = c1
     }
     if (c2 < tree.length && tree[c2] > tree[max]) {
         max = c2
     }
+    console.log("max",max)
+    // 如果有改变了
     if (max != i) {
+        // 将父节点和子节点三个中的最大值最为父节点
         let temp = tree[max]
         tree[max] = tree[i]
         tree[i] = temp
+        console.log("tree",tree)
+        // 以最大的子节点作为根结点进行遍历
         heapify(tree, max)
     }
 }
+
+
 
 function build_heap(tree) {
     let last_node = tree.length
@@ -255,21 +260,19 @@ function build_heap(tree) {
     }
 }
 
-
 function heapSort(tree) {
     build_heap(tree)
 
-    console.log(tree)
+    // console.log(tree)
 
     for (let i = tree.length-1; i >= 0; i--) {
         let temp = tree[i]
         tree[i] = tree[0]
         tree[0] = temp
-        console.log(i)
-        heapify(tree, i)
+        build_heap(tree, i)
     }
-
+    
     return tree
 }
 
-console.log(heapSort([4, 21, 6, 1, 2, 8, 3]))
+// console.log(heapSort([4, 21, 6, 1, 2, 8, 3]))
