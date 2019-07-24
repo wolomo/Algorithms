@@ -3,38 +3,60 @@
  * @return {string}
  */
 var decodeString = function(s) {
-
     /**
      * 
-     *  1.使用两个栈存储
-     *  2.当读取到数字是  将数字进栈到stackN 
-     *  3.当读取到[时候  
-     *          如果后面一位是字母 将字母进栈到stackS
-     *          一直进
-     *  4.读取到]时,将字母出栈,且数字也出栈,循环数字次
-            然后放在字母串中
-            此时如果数字串不为空,需要再次将字母进栈
-            当数字为空的时候输出
+     * 1.两个栈  数字栈 字母栈 
+     * 2.当检测到数字时,数字压栈
+     * 3.当检测到[时,1++
+     *      1)字母入栈
+     *      2)数字
      * 
      * 
      */
-    var stackN=[]
-    var stackS=[]
-    for(let i = 0;i<s.length;i++){
-
-        if(s[i]>='1'&&s[i]<='9'){
+    var stackN =[]
+    var stackS =[]
+    var res =''
+    for(let i =0 ;i<s.length;i++){
+        if(s[i]>'0'&&s[i]<='9'){
             stackN.push(s[i])
-        }
-        if(s[i]>='a'&&s[i]<='z'){
+        }else if(s[i]=='['){
+            let kk = ''
+            while(s[i+1]>='a'&&s[i+1]<='z'){
+                kk+=s[i+1]
+                i++
+            }
+            stackS.push(kk)
+        }else if(s[i]>='a'&&s[i]<='z'){
             stackS.push(s[i])
+        }else if(s[i]==']'){
+            //弹出循环的次数
+            let nums = stackN.pop()
+            let str = ""
+            let sarr =""
+            //弹出栈顶元素
+            str=stackS.pop()
+
+            // 遍历多次
+            for(let j =0;j<nums;j++){
+                sarr+=str
+            }
+
+            // 如果此时次数栈还有
+            if(stackN[0]){
+                stackS[stackS.length-1]+=sarr
+            }else{
+                res +=sarr
+            }
         }
     }
 
-    var reNumber = /^\d+$/
-    var reString = /^[a-zA-Z]+$/
-
-    console.log(stackN,stackS)
+    while(stackS[0]){
+        res+=stackS.pop()
+    }
+    console.log("answer",res)
 };
 
-
-decodeString("3[a]2[bcd]")
+decodeString("3[a]2[bc]")
+decodeString("3[a2[c]]")
+decodeString("2[abc]3[cd]ef")
+decodeString("2[2[a2[b]]]")
